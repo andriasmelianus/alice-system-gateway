@@ -12,5 +12,14 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    // return $router->app->version();
+    return 'Welcome to the '.env('APP_NAME').'!';
+});
+
+$router->group(['prefix'=>'auth'], function() use($router){
+    $router->post('login', 'AuthController@authenticate');
+
+    $router->group(['middleware'=>'jwt.auth'], function() use($router){
+        $router->get('user', 'AuthController@user');
+    });
 });
