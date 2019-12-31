@@ -16,7 +16,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Tambah data phone
      *
-     * @param Array $data
+     * @param Array $params
      * @return void
      */
     public function createPhone($params){
@@ -26,7 +26,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Baca data phone
      *
-     * @param array $data
+     * @param Array $params
      * @return void
     */
     public function readPhone($params=[]){
@@ -36,7 +36,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Mengupdate data phone
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function updatePhone($params=[]){
@@ -46,7 +46,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Menghapus data phone
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function deletePhone($params=[]){
@@ -57,7 +57,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Tambah data address
      *
-     * @param Array $data
+     * @param Array $params
      * @return void
      */
     public function createAddress($params){
@@ -67,7 +67,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Baca data address
      *
-     * @param array $data
+     * @param Array $params
      * @return void
     */
     public function readAddress($params=[]){
@@ -77,7 +77,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Mengupdate data address
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function updateAddress($params=[]){
@@ -87,7 +87,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Menghapus data address
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function deleteAddress($params=[]){
@@ -98,7 +98,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Tambah data city
      *
-     * @param Array $data
+     * @param Array $params
      * @return void
      */
     public function createCity($params){
@@ -108,7 +108,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Baca data city
      *
-     * @param array $data
+     * @param Array $params
      * @return void
     */
     public function readCity($params=[]){
@@ -118,7 +118,7 @@ class Contact extends ExternalServiceCommunicator {
      /**
       * Mengupdate data address
       *
-      * @param array $params
+      * @param Array $params
       * @return void
       */
     public function updateCity($params=[]){
@@ -128,7 +128,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Menghapus data address
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function deleteCity($params=[]){
@@ -139,7 +139,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Tambah data region
      *
-     * @param Array $data
+     * @param Array $params
      * @return void
      */
     public function createRegion($params){
@@ -149,7 +149,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Baca data region
      *
-     * @param array $data
+     * @param Array $params
      * @return void
      */
     public function readRegion($params=[]){
@@ -159,7 +159,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Mengupdate data region
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function updateRegion($params=[]){
@@ -169,7 +169,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Menghapus data region
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function deleteRegion($params=[]){
@@ -181,7 +181,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Tambah data country
      *
-     * @param Array $data
+     * @param Array $params
      * @return void
      */
     public function createCountry($params){
@@ -191,7 +191,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Baca data country
      *
-     * @param array $data
+     * @param Array $params
      * @return void
      */
     public function readCountry($params=[]){
@@ -201,7 +201,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Mengupdate data country
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function updateCountry($params=[]){
@@ -211,7 +211,7 @@ class Contact extends ExternalServiceCommunicator {
     /**
      * Menghapus data country
      *
-     * @param array $params
+     * @param Array $params
      * @return void
      */
     public function deleteCountry($params=[]){
