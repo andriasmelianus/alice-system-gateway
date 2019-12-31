@@ -74,6 +74,8 @@ class AuthController extends Controller {
     }
 
     public function user(Request $req){
-        return $req->auth;
+        // return $req->auth;
+        $user = User::where('id', $req->auth->id)->with('roles')->first();
+        return $user;
     }
 }
