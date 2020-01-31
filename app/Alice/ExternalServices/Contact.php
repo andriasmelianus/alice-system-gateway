@@ -9,7 +9,7 @@ class Contact extends ExternalServiceCommunicator {
      * Constructor
      */
     public function __construct(){
-        parent::__construct('http://contacts.local', 'wGQzPZ8u8ZWEpUNRgEekxqrjbXLQLTbn');
+        parent::__construct(env('AS_CONTACT_BASE_URL'), env('AS_CONTACT_SECRET'));
     }
 
 
