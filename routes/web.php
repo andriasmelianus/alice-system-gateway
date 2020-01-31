@@ -16,14 +16,44 @@ $router->get('/', function () use ($router) {
     return 'Welcome to the '.env('APP_NAME').'!';
 });
 
+//Route dengan prefix "auth"
 $router->group(['prefix'=>'auth'], function() use($router){
+    //Proses login
     $router->post('login', 'AuthController@authenticate');
+    $router->post('logout', 'AuthController@logout');
 
+    //Route dengan prefix "auth" yang membutuhkan login dulu
     $router->group(['middleware'=>'jwt.auth'], function() use($router){
-        $router->get('user', 'AuthController@user');
+        $router->post('user', 'UserController@create');
+        $router->get('user', 'UserController@read');
+
+        //Service
+        $router->post('service', 'ServiceController@create');
+        $router->get('service', 'ServiceController@read');
+        $router->put('service', 'ServiceController@update');
+        $router->patch('service', 'ServiceController@update');
+        $router->delete('service', 'ServiceController@delete');
+
+        //Permission
+        $router->post('permission', 'PermissionController@create');
+        $router->get('permission', 'PermissionController@read');
+        $router->get('permission-by-role', 'PermissionController@readByRole');
+        $router->put('permission', 'PermissionController@update');
+        $router->patch('permission', 'PermissionController@update');
+        $router->delete('permission', 'PermissionController@delete');
+
+        //Role
+        $router->post('role', 'RoleController@create');
+        $router->post('role-add-permission', 'RoleController@addPermission');
+        $router->get('role', 'RoleController@read');
+        $router->put('role', 'RoleController@update');
+        $router->patch('role', 'RoleController@update');
+        $router->delete('role', 'RoleController@delete');
+        $router->delete('role-remove-permission', 'RoleController@removePermission');
     });
 });
 
+//Contact
 $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($router){
     $router->post('phone', 'ContactController@createPhone');
     $router->get('phone', 'ContactController@readPhone');
@@ -54,4 +84,19 @@ $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($
     $router->put('country', 'ContactController@updateCountry');
     $router->patch('country', 'ContactController@updateCountry');
     $router->delete('country', 'ContactController@deleteCountry');
+});
+
+//Perusahaan dan cabang
+$router->group(['middleware'=>'jwt.auth'], function() use($router){
+    $router->post('company', 'CompanyController@create');
+    $router->get('company', 'CompanyController@read');
+    $router->put('company', 'CompanyController@update');
+    $router->patch('company', 'CompanyController@update');
+    $router->delete('company', 'CompanyController@delete');
+
+    $router->post('branch', 'BranchController@create');
+    $router->get('branch', 'BranchController@read');
+    $router->put('branch', 'BranchController@update');
+    $router->patch('branch', 'BranchController@update');
+    $router->delete('branch', 'BranchController@delete');
 });
