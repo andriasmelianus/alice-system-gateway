@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\RoleScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,6 +21,19 @@ class Role extends Model {
     ];
 
     /**
+     * Pemanfaatan scope role
+     * Role dengan ID 1 adalah "role keramat"
+     * Dapat mengakses seluruh menu
+     *
+     * @return void
+     */
+    protected static function boot(){
+        parent::boot();
+
+        static::addGlobalScope(new RoleScope);
+    }
+
+    /**
      * Mendapatkan daftar User berdasarkan Role
      *
      * @return User
@@ -34,6 +48,6 @@ class Role extends Model {
      * @return Permission
      */
     public function permissions(){
-        return $this->belongsToMany('App\Model\Permisison');
+        return $this->belongsToMany('App\Models\Permission')->withTimestamps();
     }
 }

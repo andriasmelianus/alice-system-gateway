@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Scopes\UserScope;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -38,6 +39,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * User dengan ID 1 adalah "user keramat"
+     * User tersebut hanya digunakan oleh developer
+     *
+     * @return void
+     */
+    protected static function boot(){
+        parent::boot();
+
+        static::addGlobalScope(new UserScope);
+    }
 
     /**
      * Mendapatkan data roles

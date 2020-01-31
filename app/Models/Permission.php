@@ -25,6 +25,6 @@ class Permission extends Model {
      * @return Role
      */
     public function roles(){
-        return $this->belongsToMany('App\Models\Role');
+        return $this->belongsToMany('App\Models\Role')->withTimestamps();
     }
 }
