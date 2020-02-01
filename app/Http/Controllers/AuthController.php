@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Validator;
 use App\User;
+use App\Models\Scopes\UserScope;
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
 use Illuminate\Http\Request;
@@ -47,11 +48,11 @@ class AuthController extends Controller {
      */
     public function authenticate(){
         $this->validate($this->request, [
-            'username' => 'required|email',
+            'username' => 'required',
             'password' => 'required'
         ]);
 
-        $user = User::where('username', $this->request->input('username'))->first();
+        $user = User::withoutGlobalScope(UserScope::class)->where('username', $this->request->input('username'))->get()->first();
         if(!$user){
             return response()->json([
                 'error' => [
@@ -73,9 +74,7 @@ class AuthController extends Controller {
         ],400);
     }
 
-    public function user(Request $req){
-        // return $req->auth;
-        $user = User::where('id', $req->auth->id)->with('roles')->first();
-        return $user;
+    public function logout(Request $request){
+
     }
 }
