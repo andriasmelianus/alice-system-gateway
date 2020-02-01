@@ -61,6 +61,14 @@ class AuthController extends Controller {
             ], 400);
         }
 
+        if(!$user->is_active){
+            return response()->json([
+                'error' => [
+                    'username' => 'Pengguna tidak aktif. Silahkan hubungi administrator.'
+                ]
+                ], 400);
+        }
+
         if(Hash::check($this->request->input('password'), $user->password)){
             return response()->json([
                 'token' => $this->jwt($user, $this->request->input('remember'))
@@ -69,7 +77,7 @@ class AuthController extends Controller {
 
         return response()->json([
             'error' => [
-                'username' => 'Username or password invalid'
+                'username' => 'Username atau password tidak valid'
             ]
         ],400);
     }
