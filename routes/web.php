@@ -26,6 +26,9 @@ $router->group(['prefix'=>'auth'], function() use($router){
     $router->group(['middleware'=>'jwt.auth'], function() use($router){
         $router->post('user', 'UserController@create');
         $router->get('user', 'UserController@read');
+        $router->put('user', 'UserController@update');
+        $router->patch('user', 'UserController@update');
+        $router->delete('user', 'UserController@delete');
 
         //Service
         $router->post('service', 'ServiceController@create');
