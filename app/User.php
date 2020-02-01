@@ -8,10 +8,11 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable, Authorizable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +22,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $fillable = [
         'name',
         'username',
+        'password',
         'is_active',
         'remember_token',
         'id_number',
@@ -43,6 +45,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * User dengan ID 1 adalah "user keramat"
      * User tersebut hanya digunakan oleh developer
+     * User tersebut dapat mengakses semua menu.
      *
      * @return void
      */

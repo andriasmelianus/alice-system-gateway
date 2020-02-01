@@ -13,10 +13,10 @@ class UserController extends Controller
     private $rules = [
         'name' => 'required|max:127',
         'username' => 'required|max:127',
-        'password' => 'required',
+        'password' => 'sometimes|required|max:127',
         'is_active' => 'boolean',
         'remember_token' => 'max:127',
-        'id_number' => 'max:127',
+        'id_number' => 'max:127|unique:users',
         'phone' => 'max:127',
         'address' => 'max:127',
         'city' => 'max:127',
@@ -46,7 +46,10 @@ class UserController extends Controller
 
         if(!isset($user)){
             $this->validate($request, $this->rules);
-            $user = User::create($request->all());
+            $newUserData = $request->all();
+            $newUserData['password'] = app('hash')->make($request->password);
+            $newUserData['id_number'] = $request->id_number == '' ? null : $request->id_number;
+            $user = User::create($newUserData);
         }
 
         return $this->apiResponser->success($user, Response::HTTP_CREATED);
@@ -72,6 +75,14 @@ class UserController extends Controller
      * @return JSON
      */
     public function update(Request $request){
+        if($request->input('password') == ''){
+            unset($this->rules['password']);
+        }
+        if($request->input('id_number') == ''){
+            unset($this->rules['id_number']);
+        }else{
+            $this->rules['id_number'] = 'max:127|unique:users,id_number,'.$request->input('id');
+        }
         $this->validate($request, $this->rules);
 
         $user = User::findOrFail($request->input('id'));
@@ -79,6 +90,9 @@ class UserController extends Controller
 
         if($user->isClean()){
             return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        if(!$user->isClean('password')){
+            $user->password = app('hash')->make($user->password);
         }
 
         $user->save();
