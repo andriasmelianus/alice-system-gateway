@@ -5,7 +5,7 @@ use App\Alice\ApiResponser;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-
+use DB;
 
 class RoleController extends Controller
 {
@@ -56,6 +56,19 @@ class RoleController extends Controller
     }
 
     /**
+     * Membaca data role berdasarkan user yang dipilih
+     *
+     * @param Request $request
+     * @return Role
+     */
+    public function readByUser(Request $request){
+        $userId = $request->input('user_id');
+        $roles = DB::table('v_role_user')->where('user_id', $userId)->get();
+
+        return $this->apiResponser->success($roles);
+    }
+
+    /**
      * Mengubah data role
      *
      * @param Request $request
@@ -99,16 +112,22 @@ class RoleController extends Controller
     public function addPermission(Request $request){
         $role = Role::findOrFail($request->role_id);
         $permissionsToAdd = collect($request->permissions);
-        $role->permissions()->attach($permissionsToAdd->pluck('id'));
+        $permissionIdsToAdd = $permissionsToAdd->pluck('id');
+        $role->permissions()->attach($permissionIdsToAdd);
 
-        return $this->apiResponser->success($permissionsToAdd);
+        $permissionsAdded = DB::table('v_permission_role')
+            ->whereIn('permission_id', $permissionIdsToAdd)
+            ->where('role_id', $role->id)
+            ->get();
+
+        return $this->apiResponser->success($permissionsAdded);
     }
 
     /**
      * Hapus permission dari role
      *
      * @param Request $request
-     * @return Permission
+     * @return JSON
      */
     public function removePermission(Request $request){
         $role = Role::findOrFail($request->input('role_id'));
