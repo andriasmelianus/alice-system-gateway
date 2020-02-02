@@ -25,10 +25,12 @@ $router->group(['prefix'=>'auth'], function() use($router){
     //Route dengan prefix "auth" yang membutuhkan login dulu
     $router->group(['middleware'=>'jwt.auth'], function() use($router){
         $router->post('user', 'UserController@create');
+        $router->post('user-add-role', 'UserController@addRole');
         $router->get('user', 'UserController@read');
         $router->put('user', 'UserController@update');
         $router->patch('user', 'UserController@update');
         $router->delete('user', 'UserController@delete');
+        $router->delete('user-remove-role', 'UserController@removeRole');
 
         //Service
         $router->post('service', 'ServiceController@create');
@@ -49,6 +51,7 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->post('role', 'RoleController@create');
         $router->post('role-add-permission', 'RoleController@addPermission');
         $router->get('role', 'RoleController@read');
+        $router->get('role-by-user', 'RoleController@readByUser');
         $router->put('role', 'RoleController@update');
         $router->patch('role', 'RoleController@update');
         $router->delete('role', 'RoleController@delete');
