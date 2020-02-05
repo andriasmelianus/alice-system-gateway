@@ -70,6 +70,19 @@ class UserController extends Controller
     }
 
     /**
+     * Membaca data pengguna berdasarkan perusahaan
+     *
+     * @param Request $request
+     * @return JSON
+     */
+    public function readByCompany(Request $request){
+        $companyId = $request->input('company_id');
+        $users = DB::table('v_company_user')->where('company_id', $companyId)->get();
+
+        return $this->apiResponser->success($users);
+    }
+
+    /**
      * Mengubah data pengguna
      *
      * @param Request $request

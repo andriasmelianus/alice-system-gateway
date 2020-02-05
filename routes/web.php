@@ -24,9 +24,11 @@ $router->group(['prefix'=>'auth'], function() use($router){
 
     //Route dengan prefix "auth" yang membutuhkan login dulu
     $router->group(['middleware'=>'jwt.auth'], function() use($router){
+        //User
         $router->post('user', 'UserController@create');
         $router->post('user-add-role', 'UserController@addRole');
         $router->get('user', 'UserController@read');
+        $router->get('user-by-company', 'UserController@readByCompany');
         $router->put('user', 'UserController@update');
         $router->patch('user', 'UserController@update');
         $router->delete('user', 'UserController@delete');
@@ -96,12 +98,15 @@ $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($
 $router->group(['middleware'=>'jwt.auth'], function() use($router){
     $router->post('company', 'CompanyController@create');
     $router->get('company', 'CompanyController@read');
+    $router->get('company-businesses', 'CompanyController@readBusinesses');
+    $router->get('company-industries', 'CompanyController@readIndustries');
     $router->put('company', 'CompanyController@update');
     $router->patch('company', 'CompanyController@update');
     $router->delete('company', 'CompanyController@delete');
 
     $router->post('branch', 'BranchController@create');
     $router->get('branch', 'BranchController@read');
+    $router->get('branch-by-company', 'BranchController@readByCompany');
     $router->put('branch', 'BranchController@update');
     $router->patch('branch', 'BranchController@update');
     $router->delete('branch', 'BranchController@delete');
