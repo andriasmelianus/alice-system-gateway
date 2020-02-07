@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Scopes\UserScope;
 use Closure;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
@@ -19,6 +20,7 @@ class JwtMiddleware
     {
         // $token = $request->get('token');
         $token = $request->bearerToken();
+        $credentials = null;
 
         if(!$token){
             return response()->json([
@@ -38,7 +40,7 @@ class JwtMiddleware
             ],400);
         }
 
-        $user = \App\User::find($credentials->sub);
+        $user = \App\User::withoutGlobalScope(new UserScope)->find($credentials->sub);
 
         $request->auth = $user;
 

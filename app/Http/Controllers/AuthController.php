@@ -56,7 +56,7 @@ class AuthController extends Controller {
         if(!$user){
             return response()->json([
                 'error' => [
-                    'username' => 'Username does not exist'
+                    'username' => 'Username tidak terdaftar'
                 ]
             ], 400);
         }
@@ -66,7 +66,7 @@ class AuthController extends Controller {
                 'error' => [
                     'username' => 'Pengguna tidak aktif. Silahkan hubungi administrator.'
                 ]
-                ], 400);
+            ], 400);
         }
 
         if(Hash::check($this->request->input('password'), $user->password)){
