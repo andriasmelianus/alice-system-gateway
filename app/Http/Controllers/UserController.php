@@ -70,6 +70,36 @@ class UserController extends Controller
     }
 
     /**
+     * Membaca data pengguna yang sedang login
+     *
+     * @param Request $request
+     * @return JSON
+     */
+    public function readByMe(Request $request){
+        return $this->apiResponser->success($request->auth);
+    }
+
+    /**
+     * Membaca data pengguna berdasarkan username yang diberikan.
+     * Function ini berguna untuk proses penambahan data pada tabel company_user.
+     * Proses penambahan pada tabel tersebut yaitu dengan melakukan pencarian pengguna terlebih dahulu berdasarkan username.
+     * Dari username yang dikirimkan, server akan mengembalikan data user tersebut.
+     *
+     * @param Request $request
+     * @return JSON
+     */
+    public function readByUsername(Request $request){
+        $username = $request->input('username');
+        $users = User::where('username', $username)->get();
+
+        if(count($users) == 0){
+            return $this->apiResponser->error(['username' => 'Username tidak ditemukan'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->apiResponser->success($users->first());
+    }
+
+    /**
      * Membaca data pengguna berdasarkan perusahaan
      *
      * @param Request $request

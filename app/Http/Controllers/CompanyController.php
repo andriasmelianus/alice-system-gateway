@@ -8,6 +8,7 @@ use App\Models\Business;
 use App\Models\Industry;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use DB;
 
 class CompanyController extends Controller
 {
@@ -74,6 +75,20 @@ class CompanyController extends Controller
     }
 
     /**
+     * Membaca data perusahaan berdasarkan user login
+     *
+     * @param Request $request
+     * @return JSON
+     */
+    public function readByMe(Request $request){
+        $userId = $request->auth['id'];
+        $companyIds = DB::table('company_user')->where('user_id', $userId)->get()->pluck('company_id');
+        $companies = Company::whereIn('id', $companyIds)->get();
+
+        return $this->apiResponser->success($companies);
+    }
+
+    /**
      * Membaca data jenis bisnis untuk proses input dan update data company
      *
      * @param
@@ -119,7 +134,7 @@ class CompanyController extends Controller
         $company->fill($companyData);
 
         if($company->isClean()){
-            return $this->errorResponse('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $company->save();
@@ -137,5 +152,49 @@ class CompanyController extends Controller
         $company->delete();
 
         return $this->apiResponser->success($company);
+    }
+
+
+
+    /**
+     * Menambahkan pengguna yang dapat mengakses data pada perusahaan tersebut
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function addUser(Request $request){
+        $companyId = $request->input('company_id');
+        $userId = $request->input('user_id');
+        $title = $request->input('title');
+
+        /** TO BE CONTINUED... */
+        $companyUser = Company::findOrFail($companyId);
+        $companyUser->users()->attach($userId, ['title'=>$title]);
+        $companyUserData = DB::table('v_company_user')
+            ->where('company_id', $companyId)
+            ->where('user_id', $userId)
+            ->first();
+
+        return $this->apiResponser->success(json_encode($companyUserData));
+    }
+
+    /**
+     * Menghapus pengguna dari perusahaan
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function removeUser(Request $request){
+        // $companyId = $request->input('company_id');
+        // $userId = $request->input('user_id');
+
+        // $companyUser = Company::findOrFail($companyId);
+        // $companyUser->users()->detach($userId);
+
+        $companyUserId = $request->input('company_user_id');
+        $companyUser = DB::table('company_user')->where('id', $companyUserId)->delete();
+
+
+        return $this->apiResponser->success($companyUser);
     }
 }

@@ -28,6 +28,8 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->post('user', 'UserController@create');
         $router->post('user-add-role', 'UserController@addRole');
         $router->get('user', 'UserController@read');
+        $router->get('user-by-me', 'UserController@readByMe');
+        $router->get('user-by-username', 'UserController@readByUsername');
         $router->get('user-by-company', 'UserController@readByCompany');
         $router->put('user', 'UserController@update');
         $router->patch('user', 'UserController@update');
@@ -98,11 +100,14 @@ $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($
 $router->group(['middleware'=>'jwt.auth'], function() use($router){
     $router->post('company', 'CompanyController@create');
     $router->get('company', 'CompanyController@read');
+    $router->get('company-by-me', 'CompanyController@readByMe');
     $router->get('company-businesses', 'CompanyController@readBusinesses');
     $router->get('company-industries', 'CompanyController@readIndustries');
     $router->put('company', 'CompanyController@update');
     $router->patch('company', 'CompanyController@update');
     $router->delete('company', 'CompanyController@delete');
+    $router->post('company-user', 'CompanyController@addUser');
+    $router->delete('company-user', 'CompanyController@removeUser');
 
     $router->post('branch', 'BranchController@create');
     $router->get('branch', 'BranchController@read');
