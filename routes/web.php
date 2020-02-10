@@ -26,7 +26,6 @@ $router->group(['prefix'=>'auth'], function() use($router){
     $router->group(['middleware'=>'jwt.auth'], function() use($router){
         //User
         $router->post('user', 'UserController@create');
-        $router->post('user-add-role', 'UserController@addRole');
         $router->get('user', 'UserController@read');
         $router->get('user-by-me', 'UserController@readByMe');
         $router->get('user-by-username', 'UserController@readByUsername');
@@ -34,7 +33,8 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->put('user', 'UserController@update');
         $router->patch('user', 'UserController@update');
         $router->delete('user', 'UserController@delete');
-        $router->delete('user-remove-role', 'UserController@removeRole');
+        $router->post('user-role', 'UserController@addRole');
+        $router->delete('user-role', 'UserController@removeRole');
 
         //Service
         $router->post('service', 'ServiceController@create');
@@ -53,13 +53,13 @@ $router->group(['prefix'=>'auth'], function() use($router){
 
         //Role
         $router->post('role', 'RoleController@create');
-        $router->post('role-add-permission', 'RoleController@addPermission');
         $router->get('role', 'RoleController@read');
         $router->get('role-by-user', 'RoleController@readByUser');
         $router->put('role', 'RoleController@update');
         $router->patch('role', 'RoleController@update');
         $router->delete('role', 'RoleController@delete');
-        $router->delete('role-remove-permission', 'RoleController@removePermission');
+        $router->post('role-permission', 'RoleController@addPermission');
+        $router->delete('role-permission', 'RoleController@removePermission');
     });
 });
 
