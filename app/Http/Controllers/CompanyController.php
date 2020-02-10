@@ -192,12 +192,12 @@ class CompanyController extends Controller
         // $companyUser->users()->detach($userId);
 
         $companyUserId = $request->input('company_user_id');
-        $companyUser = DB::table('company_user')->where('id', $companyUserId)->first();
-        if($companyUser->user_id == $request->auth->id){
+        $companyUser = DB::table('company_user')->where('id', $companyUserId);
+        if($companyUser->first()->user_id == $request->auth->id){
             return $this->apiResponser->error('Tidak dapat menghapus data Anda sendiri.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $companyUser->delete();
-        return $this->apiResponser->success($companyUser);
+        $companyUserDeletedCount = $companyUser->delete();
+        return $this->apiResponser->success($companyUserDeletedCount);
     }
 }
