@@ -39,15 +39,11 @@ class BranchController extends Controller
      * @return void
      */
     public function create(Request $request){
-        $branch = Branch::where('name', 'LIKE', $request->name)->first();
-
-        if(!isset($branch)){
-            $this->validate($request, $this->rules);
-            $branchData = $request->all();
-            $branchData['user_id'] = $request->auth->id;
-            $branchData['user'] = $request->auth->name;
-            $branch = Branch::create($branchData);
-        }
+        $this->validate($request, $this->rules);
+        $branchData = $request->all();
+        $branchData['user_id'] = $request->auth->id;
+        $branchData['user'] = $request->auth->name;
+        $branch = Branch::create($branchData);
 
         return $this->apiResponser->success($branch, Response::HTTP_CREATED);
     }
@@ -59,8 +55,12 @@ class BranchController extends Controller
      * @return JSON
      */
     public function read(Request $request){
-        $keyword = $request->input('keyword').'%';
-        $branches = Branch::where('name', 'LIKE', $keyword)->limit(10)->get();
+        $branches = [];
+        if($request->column && $request->value){
+            $branches = Branch::where($request->column, $request->value)->get();
+        }else{
+            $branches = Branch::whereNull('id')->get();
+        }
 
         return $this->apiResponser->success($branches);
     }

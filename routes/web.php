@@ -101,13 +101,16 @@ $router->group(['middleware'=>'jwt.auth'], function() use($router){
     $router->post('company', 'CompanyController@create');
     $router->get('company', 'CompanyController@read');
     $router->get('company-by-me', 'CompanyController@readByMe');
-    $router->get('company-businesses', 'CompanyController@readBusinesses');
-    $router->get('company-industries', 'CompanyController@readIndustries');
     $router->put('company', 'CompanyController@update');
     $router->patch('company', 'CompanyController@update');
     $router->delete('company', 'CompanyController@delete');
+
+    $router->get('company-user', 'UserController@readByCompany');
     $router->post('company-user', 'CompanyController@addUser');
     $router->delete('company-user', 'CompanyController@removeUser');
+
+    $router->get('company-business', 'CompanyController@readBusiness');
+    $router->get('company-industry', 'CompanyController@readIndustry');
 
     $router->post('branch', 'BranchController@create');
     $router->get('branch', 'BranchController@read');

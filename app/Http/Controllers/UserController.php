@@ -106,8 +106,12 @@ class UserController extends Controller
      * @return JSON
      */
     public function readByCompany(Request $request){
-        $companyId = $request->input('company_id');
-        $users = DB::table('v_company_user')->where('company_id', $companyId)->get();
+        $users = [];
+        if($request->column && $request->value){
+            $users = DB::table('v_company_user')->where($request->column, $request->value)->get();
+        }else{
+            $users = DB::table('v_company_user')->whereNull('id')->get();
+        }
 
         return $this->apiResponser->success($users);
     }

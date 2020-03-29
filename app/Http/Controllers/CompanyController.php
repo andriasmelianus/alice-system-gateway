@@ -89,23 +89,31 @@ class CompanyController extends Controller
     }
 
     /**
-     * Membaca data jenis bisnis untuk proses input dan update data company
+     * Membuat data jenis bisnis
      *
-     * @param
+     * @param Request $request
      * @return JSON
      */
-    public function readBusinesses(){
-        $businesses = Business::all();
+    public function createBusiness(Request $request){
+    }
+    /**
+     * Membaca data jenis bisnis untuk proses input dan update data company
+     *
+     * @param Request $request
+     * @return JSON
+     */
+    public function readBusiness(Request $request){
+        $businesses = Business::where('name', 'LIKE', '%'.$request->keyword.'%')->get();
         return $this->apiResponser->success($businesses);
     }
     /**
      * Membaca data jenis industri untuk proses input dan update data company
      *
-     * @param
+     * @param Request $request
      * @return JSON
      */
-    public function readIndustries(){
-        $industries = Industry::all();
+    public function readIndustry(Request $request){
+        $industries = Industry::where('name', 'LIKE', '%'.$request->keyword.'%')->get();
         return $this->apiResponser->success($industries);
     }
 
@@ -191,7 +199,7 @@ class CompanyController extends Controller
         // $companyUser = Company::findOrFail($companyId);
         // $companyUser->users()->detach($userId);
 
-        $companyUserId = $request->input('company_user_id');
+        $companyUserId = $request->id;
         $companyUser = DB::table('company_user')->where('id', $companyUserId);
         if($companyUser->first()->user_id == $request->auth->id){
             return $this->apiResponser->error('Tidak dapat menghapus data Anda sendiri.', Response::HTTP_UNPROCESSABLE_ENTITY);
