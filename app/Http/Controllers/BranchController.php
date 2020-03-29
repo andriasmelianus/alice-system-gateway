@@ -13,7 +13,7 @@ class BranchController extends Controller
     private $rules = [
         'name' => 'required|max:127',
         'code' => 'max:127',
-        'is_main_office' => 'boolean',
+        // 'is_main_office' => 'boolean',
         'phone' => 'max:127',
         'address' => 'max:127',
         'city' => 'max:127',
