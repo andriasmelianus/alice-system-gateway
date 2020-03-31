@@ -4,22 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Alice\ApiResponser;
 use App\Models\Company;
+use App\Models\Branch;
 use App\Models\Business;
 use App\Models\Industry;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use DB;
 
 class CompanyController extends Controller
 {
     private $apiResponser;
-    private $rules = [
-        'name' => 'required|max:127|unique:companies',
-        'tax_id' => 'max:127',
-        'business' => 'max:127',
-        'industry' => 'max:127',
-        'website' => 'max:127',
-    ];
+    private $rules;
     private $company;
 
     /**
@@ -29,6 +25,15 @@ class CompanyController extends Controller
      */
     public function __construct(ApiResponser $apiResponser, Company $company) {
         $this->apiResponser = $apiResponser;
+        $this->rules  = [
+            'name' => ['required','max:127',Rule::unique('companies')->where(function ($query){
+                return $query->whereNull('deleted_at');
+            })],
+            'tax_id' => 'max:127',
+            'business' => 'max:127',
+            'industry' => 'max:127',
+            'website' => 'max:127',
+        ];
         $this->company = $company;
     }
 
@@ -56,6 +61,7 @@ class CompanyController extends Controller
                 unset($companyData['industry']);
             }
             $company = Company::create($companyData);
+            $company->users()->attach($request->auth['id'], ['title' => 'creator']);
         }
 
         return $this->apiResponser->success($company, Response::HTTP_CREATED);
@@ -68,8 +74,15 @@ class CompanyController extends Controller
      * @return JSON
      */
     public function read(Request $request){
-        $keyword = $request->input('keyword').'%';
-        $companies = Company::where('name', 'LIKE', $keyword)->get();
+        $companies = [];
+        // !!!HARD CODED!!!
+        if($request->auth['id'] == 1){
+            $companies = Company::all();
+        }else{
+            $userId = $request->auth['id'];
+            $companyIds = DB::table('company_user')->where('user_id', $userId)->get()->pluck('company_id');
+            $companies = Company::whereIn('id', $companyIds)->get();
+        }
 
         return $this->apiResponser->success($companies);
     }
