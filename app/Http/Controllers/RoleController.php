@@ -36,7 +36,11 @@ class RoleController extends Controller
 
         if(!isset($role)){
             $this->validate($request, $this->rules);
-            $role = Role::create($request->all());
+            $roleData = $request->all();
+            if($roleData['special'] == ""){
+                $roleData['special'] = null;
+            }
+            $role = Role::create($roleData);
         }
 
         return $this->apiResponser->success($role, Response::HTTP_CREATED);
@@ -76,9 +80,12 @@ class RoleController extends Controller
      */
     public function update(Request $request){
         $this->validate($request, $this->rules);
-
-        $role = Role::findOrFail($request->input('id'));
-        $role->fill($request->all());
+        $roleData = $request->all();
+        if($roleData['special'] == ""){
+            $roleData['special'] = null;
+        }
+        $role = Role::findOrFail($roleData['id']);
+        $role->fill($roleData);
 
         if($role->isClean()){
             return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
