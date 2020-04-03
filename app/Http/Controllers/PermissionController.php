@@ -41,13 +41,11 @@ class PermissionController extends Controller
      * Digunakan untuk proses memilih permission
      * yang akan dipasangkan pada role
      *
-     * @param Request $request
+     * @param Request $request {column: String, value: String/Number}
      * @return Permission
      */
     public function read(Request $request){
-        $keyword = $request->input('keyword').'%';
-        $permissions = DB::table('v_permissions')->where('name', 'LIKE', $keyword)->get();
-
+        $permissions = DB::table('v_permissions')->get();
         return $this->apiResponser->success($permissions);
     }
 
@@ -59,9 +57,10 @@ class PermissionController extends Controller
      * @return Permission
      */
     public function readByRole(Request $request){
-        // $keyword = $request->input('keyword').'%';
-        $roleId = $request->input('role_id');
-        $permissions = DB::table('v_permission_role')->where('role_id', $roleId)->get();
+        $permissions = [];
+        if($request->column && $request->value){
+            $permissions= DB::table('v_permission_role')->where($request->column, $request->value)->get();
+        }
 
         return $this->apiResponser->success($permissions);
     }

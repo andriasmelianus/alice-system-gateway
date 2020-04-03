@@ -58,6 +58,8 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->put('role', 'RoleController@update');
         $router->patch('role', 'RoleController@update');
         $router->delete('role', 'RoleController@delete');
+        //Role-Permission
+        $router->get('role-permission', 'PermissionController@readByRole');
         $router->post('role-permission', 'RoleController@addPermission');
         $router->delete('role-permission', 'RoleController@removePermission');
     });

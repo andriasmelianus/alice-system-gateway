@@ -118,14 +118,7 @@ class RoleController extends Controller
      */
     public function addPermission(Request $request){
         $role = Role::findOrFail($request->role_id);
-        $permissionsToAdd = collect($request->permissions);
-        $permissionIdsToAdd = $permissionsToAdd->pluck('id');
-        $role->permissions()->attach($permissionIdsToAdd);
-
-        $permissionsAdded = DB::table('v_permission_role')
-            ->whereIn('permission_id', $permissionIdsToAdd)
-            ->where('role_id', $role->id)
-            ->get();
+        $permissionsAdded = $role->permissions()->attach($request->permissionIds);
 
         return $this->apiResponser->success($permissionsAdded);
     }
@@ -137,9 +130,7 @@ class RoleController extends Controller
      * @return JSON
      */
     public function removePermission(Request $request){
-        $role = Role::findOrFail($request->input('role_id'));
-        // $permissionsToRemove = collect($request->input('permissions'));
-        $role->permissions()->detach($request->input('permissions'));
+        DB::table('permission_role')->whereIn('id', $request->ids)->delete();
 
         return $this->apiResponser->success('');
     }
