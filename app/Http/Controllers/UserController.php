@@ -169,17 +169,10 @@ class UserController extends Controller
      * @return JSON
      */
     public function addRole(Request $request){
-        $user = User::findOrFail($request->input('user_id'));
-        $rolesToAdd = collect($request->roles);
-        $roleIds = $rolesToAdd->pluck('id');
-        $user->roles()->attach($roleIds);
+        $user = User::findOrFail($request->user_id);
+        $user->roles()->attach($request->roleIds);
 
-        $rolesAdded = DB::table('v_role_user')
-            ->whereIn('role_id', $roleIds)
-            ->where('user_id', $user->id)
-            ->get();
-
-        return $this->apiResponser->success($rolesAdded);
+        return $this->apiResponser->success("");
     }
 
     /**
@@ -189,9 +182,7 @@ class UserController extends Controller
      * @return JSON
      */
     public function removeRole(Request $request){
-        $user = User::findOrFail($request->input('user_id'));
-        // $permissionsToRemove = collect($request->input('roles'));
-        $user->roles()->detach($request->input('roles'));
+        DB::table('role_user')->where('id', $request->id)->delete();
 
         return $this->apiResponser->success('');
     }

@@ -66,8 +66,10 @@ class RoleController extends Controller
      * @return Role
      */
     public function readByUser(Request $request){
-        $userId = $request->input('user_id');
-        $roles = DB::table('v_role_user')->where('user_id', $userId)->get();
+        $roles = [];
+        if($request->column && $request->value){
+            $roles = DB::table('v_role_user')->where($request->column, $request->value)->get();
+        }
 
         return $this->apiResponser->success($roles);
     }

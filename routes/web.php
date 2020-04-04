@@ -33,6 +33,7 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->put('user', 'UserController@update');
         $router->patch('user', 'UserController@update');
         $router->delete('user', 'UserController@delete');
+        $router->get('user-role', 'RoleController@readByUser');
         $router->post('user-role', 'UserController@addRole');
         $router->delete('user-role', 'UserController@removeRole');
 
