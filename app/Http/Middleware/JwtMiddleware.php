@@ -41,6 +41,7 @@ class JwtMiddleware
         }
 
         $user = \App\User::withoutGlobalScope(new UserScope)->find($credentials->sub);
+        $user['permission'] = \DB::table('v_user_permission')->where('id', $user['id'])->get();
 
         $request->auth = $user;
 
