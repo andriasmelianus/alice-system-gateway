@@ -6,24 +6,13 @@ use App\Alice\ApiResponser;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use DB;
 
 class UserController extends Controller
 {
     private $apiResponser;
-    private $rules = [
-        'name' => 'required|max:127',
-        'username' => 'required|max:127',
-        'password' => 'sometimes|required|max:127',
-        'is_active' => 'boolean',
-        'remember_token' => 'max:127',
-        'id_number' => 'max:127|unique:users',
-        'phone' => 'max:127',
-        'address' => 'max:127',
-        'city' => 'max:127',
-        'region' => 'max:127',
-        'country' => 'max:127',
-    ];
+    private $rules;
     private $user;
 
     /**
@@ -33,6 +22,23 @@ class UserController extends Controller
      */
     public function __construct(ApiResponser $apiResponser, User $user) {
         $this->apiResponser = $apiResponser;
+        $this->rules  = [
+            'name' => 'required|max:127',
+            'username' => ['required', 'max:127', Rule::unique('users', 'username')->where(function($query){
+                return $query->whereNull('deleted_at');
+            })],
+            'password' => 'sometimes|required|max:127',
+            'is_active' => 'boolean',
+            'remember_token' => 'max:127',
+            'id_number' => ['max:127', Rule::unique('users', 'id_number')->where(function($query){
+                return $query->whereNull('deleted_at');
+            })],
+            'phone' => 'max:127',
+            'address' => 'max:127',
+            'city' => 'max:127',
+            'region' => 'max:127',
+            'country' => 'max:127',
+        ];
         $this->user = $user;
     }
 
@@ -43,15 +49,11 @@ class UserController extends Controller
      * @return JSON
      */
     public function create(Request $request){
-        $user = User::where('name', 'LIKE', $request->name)->first();
-
-        if(!isset($user)){
-            $this->validate($request, $this->rules);
-            $newUserData = $request->all();
-            $newUserData['password'] = app('hash')->make($request->password);
-            $newUserData['id_number'] = $request->id_number == '' ? null : $request->id_number;
-            $user = User::create($newUserData);
-        }
+        $this->validate($request, $this->rules);
+        $newUserData = $request->all();
+        $newUserData['password'] = app('hash')->make($request->password);
+        $newUserData['id_number'] = $request->id_number == '' ? null : $request->id_number;
+        $user = User::create($newUserData);
 
         return $this->apiResponser->success($user, Response::HTTP_CREATED);
     }
@@ -123,18 +125,30 @@ class UserController extends Controller
      * @return JSON
      */
     public function update(Request $request){
+        // Unset rule username, karena username tidak dapat diganti
+        unset($this->rules['username']);
+
+        // Periksa apakah user mengganti password
         if($request->input('password') == ''){
             unset($this->rules['password']);
         }
+        // Periksa apakah user mengganti id_number
         if($request->input('id_number') == ''){
             unset($this->rules['id_number']);
         }else{
-            $this->rules['id_number'] = 'max:127|unique:users,id_number,'.$request->input('id');
+            $this->rules['id_number'] = ['max:127', Rule::unique('users', 'id_number')->where(function($query) use($request){
+                return $query->whereNull('deleted_at')->where('id', '<>', $request->input('id'));
+            })];
         }
         $this->validate($request, $this->rules);
 
-        $user = User::findOrFail($request->input('id'));
-        $user->fill($request->all());
+        // Pindah data pada $request ke variabel $userUpdatedData
+        $userUpdatedData = $request->all();
+        // Hapus rule username
+        unset($userUpdatedData['username']);
+
+        $user = User::findOrFail($userUpdatedData['id']);
+        $user->fill($userUpdatedData);
 
         if($user->isClean()){
             return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -154,6 +168,10 @@ class UserController extends Controller
      * @return JSON
      */
     public function delete(Request $request){
+        if($request->auth->id == $request->id){
+            return $this->apiResponser->error('Tidak dapat menghapus data Anda sendiri.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $user = User::findOrFail($request->input('id'));
         $user->delete();
 

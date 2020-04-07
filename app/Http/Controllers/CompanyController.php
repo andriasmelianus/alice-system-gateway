@@ -44,25 +44,13 @@ class CompanyController extends Controller
      * @return void
      */
     public function create(Request $request){
-        // $company = Company::where('name', 'LIKE', $request->name)->first();
+        $this->validate($request, $this->rules);
 
-        if(!isset($company)){
-            $this->validate($request, $this->rules);
-
-            $companyData = $request->all();
-            if($companyData['business']<>''){
-                $companyData['business_id'] = Business::where('name', $companyData['business'])->first()->id;
-            }else{
-                unset($companyData['business']);
-            }
-            if($companyData['industry']<>''){
-                $companyData['industry_id'] = Industry::where('name', $companyData['industry'])->first()->id;
-            }else{
-                unset($companyData['industry']);
-            }
-            $company = Company::create($companyData);
-            $company->users()->attach($request->auth['id'], ['title' => 'creator']);
-        }
+        $companyData = $request->all();
+        $this->createBusiness($companyData['business']);
+        $this->createIndustry($companyData['industry']);
+        $company = Company::create($companyData);
+        $company->users()->attach($request->auth['id'], ['title' => 'creator']);
 
         return $this->apiResponser->success($company, Response::HTTP_CREATED);
     }
@@ -104,10 +92,15 @@ class CompanyController extends Controller
     /**
      * Membuat data jenis bisnis
      *
-     * @param Request $request
-     * @return JSON
+     * @param String $business
+     * @return void
      */
-    public function createBusiness(Request $request){
+    public function createBusiness($business){
+        if($business != null){
+            Business::firstOrCreate([
+                'name' => $business
+            ]);
+        }
     }
     /**
      * Membaca data jenis bisnis untuk proses input dan update data company
@@ -118,6 +111,20 @@ class CompanyController extends Controller
     public function readBusiness(Request $request){
         $businesses = Business::where('name', 'LIKE', '%'.$request->keyword.'%')->get();
         return $this->apiResponser->success($businesses);
+    }
+
+    /**
+     * Membuat dat ajenis industri
+     *
+     * @param String $industry
+     * @return void
+     */
+    public function createIndustry($industry){
+        if($industry != null){
+            Industry::firstOrCreate([
+                'name' => $industry
+            ]);
+        }
     }
     /**
      * Membaca data jenis industri untuk proses input dan update data company
@@ -137,21 +144,17 @@ class CompanyController extends Controller
      * @return json
      */
     public function update(Request $request){
-        $this->rules['name'] = 'required|max:127|unique:companies,name,'.$request->input('id');
+        $this->rules['name'] = ['required','max:127',Rule::unique('companies')->where(function ($query) use($request) {
+                return $query->whereNull('deleted_at')->where('id', '<>', $request->id);
+            })];
         $this->validate($request, $this->rules);
 
         $company = Company::findOrFail($request->input('id'));
         $companyData = $request->all();
-        if($companyData['business']<>''){
-            $companyData['business_id'] = Business::where('name', $companyData['business'])->first()->id;
-        }else{
-            unset($companyData['business']);
-        }
-        if($companyData['industry']<>''){
-            $companyData['industry_id'] = Industry::where('name', $companyData['industry'])->first()->id;
-        }else{
-            unset($companyData['industry']);
-        }
+        $this->createBusiness($companyData['business']);
+        $this->createIndustry($companyData['industry']);
+        unset($companyData['business']);
+        unset($companyData['industry']);
         $company->fill($companyData);
 
         if($company->isClean()){

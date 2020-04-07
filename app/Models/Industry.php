@@ -11,6 +11,8 @@ class Industry extends Model {
      */
     protected $table = 'industries';
 
+    public $timestamps = false;
+
     /**
      * Kolom-kolom yang dapat diisi
      */

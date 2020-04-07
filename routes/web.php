@@ -45,12 +45,12 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->delete('service', ['middleware' => 'permission:delete-service','uses' => 'ServiceController@delete']);
 
         //Permission
-        $router->post('permission', ['middleware' => 'permission:create-permission','uses' => 'PermissionController@create']);
-        $router->get('permission', ['middleware' => 'permission:read-permission','uses' => 'PermissionController@read']);
-        $router->get('permission-by-role', ['middleware' => 'permission:read-permission','uses' => 'PermissionController@readByRole']);
-        $router->put('permission', ['middleware' => 'permission:update-permission','uses' => 'PermissionController@update']);
-        $router->patch('permission', ['middleware' => 'permission:update-permission','uses' => 'PermissionController@update']);
-        $router->delete('permission', ['middleware' => 'permission:delete-permission','uses' => 'PermissionController@delete']);
+        $router->post('permission', ['middleware' => 'permission:create-role','uses' => 'PermissionController@create']);
+        $router->get('permission', ['middleware' => 'permission:read-role','uses' => 'PermissionController@read']);
+        $router->get('permission-by-role', ['middleware' => 'permission:read-role','uses' => 'PermissionController@readByRole']);
+        $router->put('permission', ['middleware' => 'permission:update-role','uses' => 'PermissionController@update']);
+        $router->patch('permission', ['middleware' => 'permission:update-role','uses' => 'PermissionController@update']);
+        $router->delete('permission', ['middleware' => 'permission:delete-role','uses' => 'PermissionController@delete']);
 
         //Role
         $router->post('role', ['middleware' => 'permission:create-role','uses' => 'RoleController@create']);
@@ -60,7 +60,7 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->patch('role', ['middleware' => 'permission:update-role','uses' => 'RoleController@update']);
         $router->delete('role', ['middleware' => 'permission:delete-role','uses' => 'RoleController@delete']);
         //Role-Permission
-        $router->get('role-permission', ['middleware' => 'permission:read-permission','uses' => 'PermissionController@readByRole']);
+        $router->get('role-permission', ['middleware' => 'permission:read-role','uses' => 'PermissionController@readByRole']);
         $router->post('role-permission', ['middleware' => 'permission:create-role','uses' => 'RoleController@addPermission']);
         $router->delete('role-permission', ['middleware' => 'permission:create-role','uses' => 'RoleController@removePermission']);
     });

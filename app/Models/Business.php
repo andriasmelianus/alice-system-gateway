@@ -11,6 +11,8 @@ class Business extends Model {
      */
     protected $table = 'businesses';
 
+    public $timestamps = false;
+
     /**
      * Kolom-kolom yang dapat diisi
      */
