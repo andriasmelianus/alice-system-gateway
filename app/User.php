@@ -20,6 +20,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
+        'company_id',
         'name',
         'username',
         'password',
@@ -56,6 +57,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Local scope, digunakan untuk mendapatkan data user pada perusahaan yang sama
+     *
+     * @param Object $query
+     * @param Integer $companyId
+     * @return Object
+     */
+    public function scopeCompany($query, $companyId){
+        return $query->where('company_id', $companyId);
+    }
+
+    /**
      * Mendapatkan data roles
      *
      * @return Role
@@ -69,7 +81,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return Company
      */
-    public function companies(){
-        return $this->belongsToMany('App\Models\User');
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
     }
 }

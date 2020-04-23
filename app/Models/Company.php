@@ -43,6 +43,6 @@ class Company extends Model {
      * @return User
      */
     public function users(){
-        return $this->belongsToMany('App\User')->withTimestamps();
+        return $this->hasMany('App\User');
     }
 }

@@ -16,15 +16,15 @@ $router->get('/', function () use ($router) {
     return 'Welcome to the '.env('APP_NAME').'!';
 });
 
-//Route dengan prefix "auth"
+// Route dengan prefix "auth"
 $router->group(['prefix'=>'auth'], function() use($router){
-    //Proses login
+    // Proses login
     $router->post('login', 'AuthController@authenticate');
     $router->post('logout', 'AuthController@logout');
 
-    //Route dengan prefix "auth" yang membutuhkan login dulu
+    // Route dengan prefix "auth" yang membutuhkan login dulu
     $router->group(['middleware'=>'jwt.auth'], function() use($router){
-        //User
+        // User
         $router->post('user', ['middleware' => 'permission:create-user','uses' => 'UserController@create']);
         $router->get('user', ['middleware' => 'permission:read-user','uses' => 'UserController@read']);
         $router->get('user-by-me', 'UserController@readByMe');
@@ -37,14 +37,14 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->post('user-role', ['middleware' => 'permission:create-user','uses' => 'UserController@addRole']);
         $router->delete('user-role', ['middleware' => 'permission:create-user','uses' => 'UserController@removeRole']);
 
-        //Service
+        // Service
         $router->post('service', ['middleware' => 'permission:create-service','uses' => 'ServiceController@create']);
         $router->get('service', ['middleware' => 'permission:read-service','uses' => 'ServiceController@read']);
         $router->put('service', ['middleware' => 'permission:update-service','uses' => 'ServiceController@update']);
         $router->patch('service', ['middleware' => 'permission:update-service','uses' => 'ServiceController@update']);
         $router->delete('service', ['middleware' => 'permission:delete-service','uses' => 'ServiceController@delete']);
 
-        //Permission
+        // Permission
         $router->post('permission', ['middleware' => 'permission:create-role','uses' => 'PermissionController@create']);
         $router->get('permission', ['middleware' => 'permission:read-role','uses' => 'PermissionController@read']);
         $router->get('permission-by-role', ['middleware' => 'permission:read-role','uses' => 'PermissionController@readByRole']);
@@ -52,21 +52,21 @@ $router->group(['prefix'=>'auth'], function() use($router){
         $router->patch('permission', ['middleware' => 'permission:update-role','uses' => 'PermissionController@update']);
         $router->delete('permission', ['middleware' => 'permission:delete-role','uses' => 'PermissionController@delete']);
 
-        //Role
+        // Role
         $router->post('role', ['middleware' => 'permission:create-role','uses' => 'RoleController@create']);
         $router->get('role', ['middleware' => 'permission:read-role','uses' => 'RoleController@read']);
         $router->get('role-by-user', ['middleware' => 'permission:read-role','uses' => 'RoleController@readByUser']);
         $router->put('role', ['middleware' => 'permission:update-role','uses' => 'RoleController@update']);
         $router->patch('role', ['middleware' => 'permission:update-role','uses' => 'RoleController@update']);
         $router->delete('role', ['middleware' => 'permission:delete-role','uses' => 'RoleController@delete']);
-        //Role-Permission
+        // Role-Permission
         $router->get('role-permission', ['middleware' => 'permission:read-role','uses' => 'PermissionController@readByRole']);
         $router->post('role-permission', ['middleware' => 'permission:create-role','uses' => 'RoleController@addPermission']);
         $router->delete('role-permission', ['middleware' => 'permission:create-role','uses' => 'RoleController@removePermission']);
     });
 });
 
-//Contact
+// Contact
 $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($router){
     $router->post('phone', ['middleware' => 'permission:create-contact','uses' => 'ContactController@createPhone']);
     $router->get('phone', ['middleware' => 'permission:read-contact','uses' => 'ContactController@readPhone']);
@@ -99,18 +99,13 @@ $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($
     $router->delete('country', ['middleware' => 'permission:delete-contact','uses' => 'ContactController@deleteCountry']);
 });
 
-//Perusahaan dan cabang
+// Perusahaan dan cabang
 $router->group(['middleware'=>'jwt.auth'], function() use($router){
     $router->post('company', ['middleware' => 'permission:create-company','uses' => 'CompanyController@create']);
     $router->get('company', ['middleware' => 'permission:read-company','uses' => 'CompanyController@read']);
-    $router->get('company-by-me', ['middleware' => 'permission:read-company','uses' => 'CompanyController@readByMe']);
     $router->put('company', ['middleware' => 'permission:read-company','uses' => 'CompanyController@update']);
     $router->patch('company', ['middleware' => 'permission:read-company','uses' => 'CompanyController@update']);
     $router->delete('company', ['middleware' => 'permission:delete-company','uses' => 'CompanyController@delete']);
-
-    $router->get('company-user', ['middleware' => 'permission:read-user','uses' => 'UserController@readByCompany']);
-    $router->post('company-user', ['middleware' => 'permission:create-company','uses' => 'CompanyController@addUser']);
-    $router->delete('company-user', ['middleware' => 'permission:create-company','uses' => 'CompanyController@removeUser']);
 
     $router->get('company-business', ['middleware' => 'permission:read-company','uses' => 'CompanyController@readBusiness']);
     $router->get('company-industry', ['middleware' => 'permission:read-company','uses' => 'CompanyController@readIndustry']);

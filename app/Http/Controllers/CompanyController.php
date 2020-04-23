@@ -50,7 +50,6 @@ class CompanyController extends Controller
         $this->createBusiness($companyData['business']);
         $this->createIndustry($companyData['industry']);
         $company = Company::create($companyData);
-        $company->users()->attach($request->auth['id'], ['title' => 'creator']);
 
         return $this->apiResponser->success($company, Response::HTTP_CREATED);
     }
@@ -63,30 +62,64 @@ class CompanyController extends Controller
      */
     public function read(Request $request){
         $companies = [];
+
+        // User ingin mendapatkan data berdasarkan ID
+        if($request->id){
+            $companies = Company::where('id', $request->id)->get();
+            return $this->apiResponser->success($companies);
+        }
+
         // !!!HARD CODED!!!
         if($request->auth['id'] == 1){
-            $companies = Company::all();
+            $companies = Company::where('name', 'LIKE', '%'.$request->keyword.'%')->get();
         }else{
-            $userId = $request->auth['id'];
-            $companyIds = DB::table('company_user')->where('user_id', $userId)->get()->pluck('company_id');
-            $companies = Company::whereIn('id', $companyIds)->get();
+            $companies = Company::where('name', 'LIKE', '%'.$request->keyword.'%')->where('company_id', $request->auth['company_id'])->get();
         }
 
         return $this->apiResponser->success($companies);
     }
 
+
+
     /**
-     * Membaca data perusahaan berdasarkan user login
+     * Mengupdate data perusahaan
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function update(Request $request){
+        $this->rules['name'] = ['required','max:127',Rule::unique('companies')->where(function ($query) use($request) {
+                return $query->whereNull('deleted_at')->where('id', '<>', $request->id);
+            })];
+        $this->validate($request, $this->rules);
+
+        $company = Company::findOrFail($request->input('id'));
+        $companyData = $request->all();
+        $this->createBusiness($companyData['business']);
+        $this->createIndustry($companyData['industry']);
+        unset($companyData['business']);
+        unset($companyData['industry']);
+        $company->fill($companyData);
+
+        if($company->isClean()){
+            return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $company->save();
+        return $this->apiResponser->success($company);
+    }
+
+    /**
+     * Menghapus data perushaaan
      *
      * @param Request $request
      * @return JSON
      */
-    public function readByMe(Request $request){
-        $userId = $request->auth['id'];
-        $companyIds = DB::table('company_user')->where('user_id', $userId)->get()->pluck('company_id');
-        $companies = Company::whereIn('id', $companyIds)->get();
+    public function delete(Request $request){
+        $company = Company::findOrFail($request->input('id'));
+        $company->delete();
 
-        return $this->apiResponser->success($companies);
+        return $this->apiResponser->success($company);
     }
 
     /**
@@ -137,91 +170,4 @@ class CompanyController extends Controller
         return $this->apiResponser->success($industries);
     }
 
-    /**
-     * Mengupdate data perusahaan
-     *
-     * @param Request $request
-     * @return json
-     */
-    public function update(Request $request){
-        $this->rules['name'] = ['required','max:127',Rule::unique('companies')->where(function ($query) use($request) {
-                return $query->whereNull('deleted_at')->where('id', '<>', $request->id);
-            })];
-        $this->validate($request, $this->rules);
-
-        $company = Company::findOrFail($request->input('id'));
-        $companyData = $request->all();
-        $this->createBusiness($companyData['business']);
-        $this->createIndustry($companyData['industry']);
-        unset($companyData['business']);
-        unset($companyData['industry']);
-        $company->fill($companyData);
-
-        if($company->isClean()){
-            return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $company->save();
-        return $this->apiResponser->success($company);
-    }
-
-    /**
-     * Menghapus data perushaaan
-     *
-     * @param Request $request
-     * @return JSON
-     */
-    public function delete(Request $request){
-        $company = Company::findOrFail($request->input('id'));
-        $company->delete();
-
-        return $this->apiResponser->success($company);
-    }
-
-
-
-    /**
-     * Menambahkan pengguna yang dapat mengakses data pada perusahaan tersebut
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function addUser(Request $request){
-        $companyId = $request->input('company_id');
-        $userId = $request->input('user_id');
-        $title = $request->input('title');
-
-        /** TO BE CONTINUED... */
-        $companyUser = Company::findOrFail($companyId);
-        $companyUser->users()->attach($userId, ['title'=>$title]);
-        $companyUserData = DB::table('v_company_user')
-            ->where('company_id', $companyId)
-            ->where('user_id', $userId)
-            ->first();
-
-        return $this->apiResponser->success(json_encode($companyUserData));
-    }
-
-    /**
-     * Menghapus pengguna dari perusahaan
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function removeUser(Request $request){
-        // $companyId = $request->input('company_id');
-        // $userId = $request->input('user_id');
-
-        // $companyUser = Company::findOrFail($companyId);
-        // $companyUser->users()->detach($userId);
-
-        $companyUserId = $request->id;
-        $companyUser = DB::table('company_user')->where('id', $companyUserId);
-        if($companyUser->first()->user_id == $request->auth->id){
-            return $this->apiResponser->error('Tidak dapat menghapus data Anda sendiri.', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $companyUserDeletedCount = $companyUser->delete();
-        return $this->apiResponser->success($companyUserDeletedCount);
-    }
 }

@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use App\Models\Scopes\UserScope;
 use DB;
 
 class UserController extends Controller
@@ -24,7 +25,7 @@ class UserController extends Controller
         $this->apiResponser = $apiResponser;
         $this->rules  = [
             'name' => 'required|max:127',
-            'username' => ['required', 'max:127', Rule::unique('users', 'username')->where(function($query){
+            'username' => ['required', 'min:5', 'max:127', Rule::unique('users', 'username')->where(function($query){
                 return $query->whereNull('deleted_at');
             })],
             'password' => 'sometimes|required|max:127',
@@ -51,6 +52,12 @@ class UserController extends Controller
     public function create(Request $request){
         $this->validate($request, $this->rules);
         $newUserData = $request->all();
+
+        // Cek apakah yang membuat user adalah user system
+        // Bila bukan maka company ID sama dengan user pembuat
+        if($request->auth['id'] != 1){
+            $newUserData['company_id'] = $request->auth['company_id'];
+        }
         $newUserData['password'] = app('hash')->make($request->password);
         $newUserData['id_number'] = $request->id_number == '' ? null : $request->id_number;
         $user = User::create($newUserData);
@@ -61,12 +68,24 @@ class UserController extends Controller
     /**
      * Membaca data pengguna
      *
-     * @param Request $request
+     * @param Request $request {column, value}
      * @return JSON
      */
     public function read(Request $request){
-        $keyword = $request->input('keyword').'%';
-        $users = User::where('name', 'LIKE', $keyword)->get();
+        $users = [];
+        if($request->auth['id'] == 1){
+            $users = DB::table('v_users')->whereIn('id', User::all('id'))->get();
+            return $this->apiResponser->success($users);
+        }
+
+        if($request->column && $request->value){
+            $users = DB::table('v_users')
+                ->where($request->column, $request->value)
+                ->whereIn('id', User::select('id')->company($request->auth['company_id'])->get())->get();
+        } else {
+            $users = DB::table('v_users')
+                ->whereIn('id', User::select('id')->company($request->auth['company_id'])->get())->get();
+        }
 
         return $this->apiResponser->success($users);
     }
@@ -99,23 +118,6 @@ class UserController extends Controller
         }
 
         return $this->apiResponser->success($users->first());
-    }
-
-    /**
-     * Membaca data pengguna berdasarkan perusahaan
-     *
-     * @param Request $request
-     * @return JSON
-     */
-    public function readByCompany(Request $request){
-        $users = [];
-        if($request->column && $request->value){
-            $users = DB::table('v_company_user')->where($request->column, $request->value)->get();
-        }else{
-            $users = DB::table('v_company_user')->whereNull('id')->get();
-        }
-
-        return $this->apiResponser->success($users);
     }
 
     /**
