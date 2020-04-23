@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Alice\ApiResponser;
+use App\Alice\ExternalServices\Contact;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,13 +16,14 @@ class UserController extends Controller
     private $apiResponser;
     private $rules;
     private $user;
+    private $contact;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, User $user) {
+    public function __construct(ApiResponser $apiResponser, User $user, Contact $contact) {
         $this->apiResponser = $apiResponser;
         $this->rules  = [
             'name' => 'required|max:127',
@@ -41,6 +43,7 @@ class UserController extends Controller
             'country' => 'max:127',
         ];
         $this->user = $user;
+        $this->contact = $contact;
     }
 
     /**
@@ -60,6 +63,7 @@ class UserController extends Controller
         }
         $newUserData['password'] = app('hash')->make($request->password);
         $newUserData['id_number'] = $request->id_number == '' ? null : $request->id_number;
+        $this->contact->extractContact($newUserData);
         $user = User::create($newUserData);
 
         return $this->apiResponser->success($user, Response::HTTP_CREATED);
@@ -158,6 +162,7 @@ class UserController extends Controller
         if(!$user->isClean('password')){
             $user->password = app('hash')->make($user->password);
         }
+        $this->contact->extractContact($userUpdatedData);
 
         $user->save();
         return $this->apiResponser->success($user);

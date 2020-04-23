@@ -14,6 +14,54 @@ class Contact extends ExternalServiceCommunicator {
 
 
     /**
+     * Mengekstrak data dan mengirimkannya ke microservice contact
+     * @param Array $data
+     * @return void
+     */
+    public function extractContact($data){
+        if(isset($data['phone'])){
+            $this->createPhone([
+                'form_params' => [
+                    'number' => $data['phone']
+                ]
+            ]);
+        }
+
+        if(isset($data['address'])){
+            $this->createAddress([
+                'form_params' => [
+                    'name' => $data['address']
+                ]
+            ]);
+        }
+
+        if(isset($data['city'])){
+            $this->createCity([
+                'form_params' => [
+                    'name' => $data['city']
+                ]
+            ]);
+        }
+
+        if(isset($data['region'])){
+            $this->createRegion([
+                'form_params' => [
+                    'name' => $data['region']
+                ]
+            ]);
+        }
+
+        if(isset($data['country'])){
+            $this->createCountry([
+                'form_params' => [
+                    'name' => $data['country']
+                ]
+            ]);
+        }
+    }
+
+
+    /**
      * Tambah data phone
      *
      * @param Array $params

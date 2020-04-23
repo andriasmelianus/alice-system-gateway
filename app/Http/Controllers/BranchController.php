@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Alice\ApiResponser;
+use App\Alice\ExternalServices\Contact;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,15 +22,17 @@ class BranchController extends Controller
         'country' => 'max:127',
     ];
     private $branch;
+    private $contact;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, Branch $branch) {
+    public function __construct(ApiResponser $apiResponser, Branch $branch, Contact $contact) {
         $this->apiResponser = $apiResponser;
         $this->branch = $branch;
+        $this->contact = $contact;
     }
 
     /**
@@ -43,6 +46,7 @@ class BranchController extends Controller
         $branchData = $request->all();
         $branchData['user_id'] = $request->auth->id;
         $branchData['user'] = $request->auth->name;
+        $this->contact->extractContact($branchData);
         $branch = Branch::create($branchData);
 
         return $this->apiResponser->success($branch, Response::HTTP_CREATED);
@@ -91,6 +95,7 @@ class BranchController extends Controller
         $branchData = $request->all();
         $branchData['user_id'] = $request->auth->id;
         $branchData['user'] = $request->auth->name;
+        $this->contact->extractContact($branchData);
         $branch->fill($branchData);
 
         if($branch->isClean()){
