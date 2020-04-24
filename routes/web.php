@@ -103,8 +103,8 @@ $router->group(['prefix'=>'contact', 'middleware'=>'jwt.auth'], function() use($
 $router->group(['middleware'=>'jwt.auth'], function() use($router){
     $router->post('company', ['middleware' => 'permission:create-company','uses' => 'CompanyController@create']);
     $router->get('company', ['middleware' => 'permission:read-company','uses' => 'CompanyController@read']);
-    $router->put('company', ['middleware' => 'permission:read-company','uses' => 'CompanyController@update']);
-    $router->patch('company', ['middleware' => 'permission:read-company','uses' => 'CompanyController@update']);
+    $router->put('company', ['middleware' => 'permission:update-company','uses' => 'CompanyController@update']);
+    $router->patch('company', ['middleware' => 'permission:update-company','uses' => 'CompanyController@update']);
     $router->delete('company', ['middleware' => 'permission:delete-company','uses' => 'CompanyController@delete']);
 
     $router->get('company-business', ['middleware' => 'permission:read-company','uses' => 'CompanyController@readBusiness']);
