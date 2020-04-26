@@ -21,6 +21,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $fillable = [
         'company_id',
+        'branch_id', // Seorang user hanya dapat aktif pada 1 cabang
         'name',
         'username',
         'password',
@@ -83,5 +84,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function company(){
         return $this->belongsTo('App\Models\Company');
+    }
+
+    /**
+     * Mendapatkan data cabang
+     *
+     * @return Branch
+     */
+    public function branch(){
+        return $this->belongsTo('App\Models\Branch');
     }
 }

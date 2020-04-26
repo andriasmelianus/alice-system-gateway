@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Alice\ApiResponser;
 use App\Alice\ExternalServices\Contact;
 use App\User;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -101,7 +102,9 @@ class UserController extends Controller
      * @return JSON
      */
     public function readByMe(Request $request){
-        return $this->apiResponser->success($request->auth);
+        $myData = $request->auth;
+        $myData['branch'] = Branch::find($myData['branch_id']);
+        return $this->apiResponser->success($myData);
     }
 
     /**

@@ -25,4 +25,13 @@ class Branch extends Model {
         'user_id',
         'user',
     ];
+
+    /**
+     * Mendapatkan pengguna-pengguna yang ada di cabang tersebut
+     *
+     * @return User
+     */
+    public function users(){
+        return $this->hasMany('App\User');
+    }
 }

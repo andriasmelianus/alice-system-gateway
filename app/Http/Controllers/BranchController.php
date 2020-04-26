@@ -62,8 +62,10 @@ class BranchController extends Controller
         $branches = [];
         if($request->column && $request->value){
             $branches = Branch::where($request->column, $request->value)->get();
+        }else if($request->keyword){
+            $branches = Branch::where('name', 'LIKE', '%'.$request->keyword.'%')->get();
         }else{
-            $branches = Branch::whereNull('id')->get();
+            $branches = Branch::where('company_id', $request->auth['company_id'])->get();
         }
 
         return $this->apiResponser->success($branches);
