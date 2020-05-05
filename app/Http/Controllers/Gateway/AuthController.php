@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gateway;
 
+use App\Http\Controllers\Controller;
 use Validator;
 use App\User;
 use App\Models\Scopes\UserScope;

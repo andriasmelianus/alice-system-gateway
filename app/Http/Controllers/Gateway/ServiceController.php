@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gateway;
 
+use App\Http\Controllers\Controller;
 use App\Alice\ApiResponser;
 use App\Models\Service;
 use Illuminate\Http\Request;

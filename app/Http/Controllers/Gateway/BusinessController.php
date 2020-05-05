@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gateway;
 
-class IndustryController extends Controller
+use App\Http\Controllers\Controller;
+
+class BusinessController extends Controller
 {
     /**
      * Create a new controller instance.

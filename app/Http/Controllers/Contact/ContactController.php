@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Contact;
 
+use App\Http\Controllers\Controller;
 use App\Alice\ApiResponser;
 use App\Alice\ExternalServices\Contact;
 use Illuminate\Http\Request;
