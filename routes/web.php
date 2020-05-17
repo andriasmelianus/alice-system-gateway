@@ -128,14 +128,17 @@ $router->group(['middleware'=>'jwt.auth'], function() use($router){
     $router->delete('product', ['middleware' => 'permission:delete-product','uses' => 'Product\ProductController@delete']);
     $router->group(['prefix'=>'product'], function() use($router){
         // Product Category
-        $router->post('category', ['middleware' => 'permission:update-product','uses' => 'Product\ProductController@addCategory']);
-        $router->delete('category', ['middleware' => 'permission:update-product','uses' => 'Product\ProductController@removeCategory']);
+        $router->post('category', ['middleware' => 'permission:update-product','uses' => 'Product\CategoryController@add']);
+        $router->get('category', ['middleware' => 'permission:read-product','uses' => 'Product\CategoryController@get']);
+        $router->delete('category', ['middleware' => 'permission:update-product','uses' => 'Product\CategoryController@remove']);
+        // Product Brand
+        $router->get('brand', ['middleware' => 'permission:read-product','uses' => 'Product\BrandController@get']);
 
         // Product Images
         // Catatan: Data gambar dikirimkan bersamaan dengan permintaan data produk
         $router->post('image', ['middleware' => 'permission:create-product','uses' => 'Product\ProductController@addImage']);
-        $router->put('image', ['middleware' => 'permission:update-product','uses' => 'Product\ProductController@setAsDefaultImage']);
-        $router->patch('image', ['middleware' => 'permission:update-product','uses' => 'Product\ProductController@setAsDefaultImage']);
+        $router->put('image', ['middleware' => 'permission:update-product','uses' => 'Product\ProductController@setDefaultImage']);
+        $router->patch('image', ['middleware' => 'permission:update-product','uses' => 'Product\ProductController@setDefaultImage']);
         $router->delete('image', ['middleware' => 'permission:delete-product','uses' => 'Product\ProductController@removeImage']);
 
         // Product Movement
