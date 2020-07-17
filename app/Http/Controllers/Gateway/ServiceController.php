@@ -23,7 +23,8 @@ class ServiceController extends Controller
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, Service $service) {
+    public function __construct(ApiResponser $apiResponser, Service $service)
+    {
         $this->apiResponser = $apiResponser;
         $this->service = $service;
     }
@@ -34,10 +35,11 @@ class ServiceController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $service = Service::where('name', 'LIKE', $request->name)->first();
 
-        if(!isset($service)){
+        if (!isset($service)) {
             $this->validate($request, $this->rules);
             $service = Service::create($request->all());
         }
@@ -51,8 +53,9 @@ class ServiceController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function read(Request $request){
-        $keyword = $request->input('keyword').'%';
+    public function read(Request $request)
+    {
+        $keyword = $request->input('keyword') . '%';
         $services = Service::where('name', 'LIKE', $keyword)->limit(10)->get();
 
         return $this->apiResponser->success($services);
@@ -64,13 +67,14 @@ class ServiceController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $this->validate($request, $this->rules);
 
         $service = Service::findOrFail($request->input('id'));
         $service->fill($request->all());
 
-        if($service->isClean()){
+        if ($service->isClean()) {
             return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -84,7 +88,8 @@ class ServiceController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
         $service = Service::findOrFail($request->input('id'));
         $service->delete();
 

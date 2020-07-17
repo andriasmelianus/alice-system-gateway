@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Alice;
 
 use GuzzleHttp\Client;
 
-class ExternalServiceCommunicator {
+class ExternalServiceCommunicator
+{
 
     private $baseUri;
     private $secret;
@@ -14,7 +16,8 @@ class ExternalServiceCommunicator {
      * @param String $baseUri
      * @param String $secret
      */
-    public function __construct($baseUri, $secret){
+    public function __construct($baseUri, $secret)
+    {
         $this->baseUri = $baseUri;
         $this->secret = $secret;
     }
@@ -27,7 +30,8 @@ class ExternalServiceCommunicator {
      * @param array $params
      * @return void
      */
-    public function performRequest($method, $requestUrl, $params){
+    public function performRequest($method, $requestUrl, $params)
+    {
         $client = new Client([
             'base_uri' => $this->baseUri
         ]);
@@ -35,7 +39,7 @@ class ExternalServiceCommunicator {
         /**
          * Pemasangan secret
          */
-        if(isset($this->secret)){
+        if (isset($this->secret)) {
             $params['headers'] = [
                 'Authorization' => "Bearer {$this->secret}"
             ];

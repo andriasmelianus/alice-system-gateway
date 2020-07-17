@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Business extends Model {
+class Business extends Model
+{
 
     /**
      * Nama tabel di dalam database
@@ -26,7 +27,8 @@ class Business extends Model {
      *
      * @return Company
      */
-    public function companies(){
+    public function companies()
+    {
         return $this->hasMany('App\Models\Company');
     }
 }

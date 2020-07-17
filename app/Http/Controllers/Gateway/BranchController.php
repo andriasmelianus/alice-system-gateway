@@ -30,7 +30,8 @@ class BranchController extends Controller
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, Branch $branch, Contact $contact) {
+    public function __construct(ApiResponser $apiResponser, Branch $branch, Contact $contact)
+    {
         $this->apiResponser = $apiResponser;
         $this->branch = $branch;
         $this->contact = $contact;
@@ -42,7 +43,8 @@ class BranchController extends Controller
      * @param Request $request
      * @return void
      */
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $this->validate($request, $this->rules);
         $branchData = $request->all();
         $branchData['user_id'] = $request->auth->id;
@@ -59,13 +61,14 @@ class BranchController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function read(Request $request){
+    public function read(Request $request)
+    {
         $branches = [];
-        if($request->column && $request->value){
+        if ($request->column && $request->value) {
             $branches = Branch::where($request->column, $request->value)->get();
-        }else if($request->keyword){
-            $branches = Branch::where('name', 'LIKE', '%'.$request->keyword.'%')->get();
-        }else{
+        } else if ($request->keyword) {
+            $branches = Branch::where('name', 'LIKE', '%' . $request->keyword . '%')->get();
+        } else {
             $branches = Branch::where('company_id', $request->auth['company_id'])->get();
         }
 
@@ -78,7 +81,8 @@ class BranchController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function readByCompany(Request $request){
+    public function readByCompany(Request $request)
+    {
         $companyId = $request->input('company_id');
         $branches = Branch::where('company_id', $companyId)->get();
 
@@ -91,7 +95,8 @@ class BranchController extends Controller
      * @param Request $request
      * @return json
      */
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $this->validate($request, $this->rules);
 
         $branch = Branch::findOrFail($request->input('id'));
@@ -101,7 +106,7 @@ class BranchController extends Controller
         $this->contact->extractContact($branchData);
         $branch->fill($branchData);
 
-        if($branch->isClean()){
+        if ($branch->isClean()) {
             return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -115,7 +120,8 @@ class BranchController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
         $branch = Branch::findOrFail($request->input('id'));
         $branch->delete();
 

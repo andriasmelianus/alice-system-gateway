@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Service extends Model {
+class Service extends Model
+{
     use SoftDeletes;
 
     protected $table = 'services';
@@ -25,7 +26,8 @@ class Service extends Model {
      *
      * @return Permission
      */
-    public function permissions(){
+    public function permissions()
+    {
         return $this->hasMany('App\Models\Permission');
     }
 }

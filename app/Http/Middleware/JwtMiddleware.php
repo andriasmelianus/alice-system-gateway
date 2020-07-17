@@ -22,7 +22,7 @@ class JwtMiddleware
         $token = $request->bearerToken();
         $credentials = null;
 
-        if(!$token){
+        if (!$token) {
             // Token tidak ada.
             return response()->json([
                 'error' => 'Token not provided'
@@ -36,12 +36,12 @@ class JwtMiddleware
             // Token sudah tidak berlaku.
             return response()->json([
                 'error' => 'Token is expired'
-            ],400);
-        } catch (Exception $e){
+            ], 400);
+        } catch (Exception $e) {
             // Exception lainnya yang menggagalkan proses decode token.
             return response()->json([
                 'error' => 'An error while decoding token'
-            ],400);
+            ], 400);
         }
 
         // Token berhasil didecode. Ambil ID user yang tersimpan dan pasangkan pada variabel $request->auth.

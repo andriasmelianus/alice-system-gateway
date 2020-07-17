@@ -6,7 +6,8 @@ use App\Models\Scopes\RoleScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Role extends Model {
+class Role extends Model
+{
     use SoftDeletes;
 
     protected $table = 'roles';
@@ -27,7 +28,8 @@ class Role extends Model {
      *
      * @return void
      */
-    protected static function boot(){
+    protected static function boot()
+    {
         parent::boot();
 
         static::addGlobalScope(new RoleScope);
@@ -38,7 +40,8 @@ class Role extends Model {
      *
      * @return User
      */
-    public function users() {
+    public function users()
+    {
         return $this->belongsToMany('App\User');
     }
 
@@ -47,7 +50,8 @@ class Role extends Model {
      *
      * @return Permission
      */
-    public function permissions(){
+    public function permissions()
+    {
         return $this->belongsToMany('App\Models\Permission')->withTimestamps();
     }
 }

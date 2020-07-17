@@ -1,14 +1,17 @@
 <?php
+
 namespace App\Alice\ExternalServices;
 
 use App\Alice\ExternalServiceCommunicator;
 
-class Contact extends ExternalServiceCommunicator {
+class Contact extends ExternalServiceCommunicator
+{
 
     /**
      * Constructor
      */
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct(env('AS_CONTACT_BASE_URL'), env('AS_CONTACT_SECRET'));
     }
 
@@ -18,8 +21,9 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $data
      * @return void
      */
-    public function extractContact($data){
-        if(isset($data['phone'])){
+    public function extractContact($data)
+    {
+        if (isset($data['phone'])) {
             $this->createPhone([
                 'form_params' => [
                     'number' => $data['phone']
@@ -27,7 +31,7 @@ class Contact extends ExternalServiceCommunicator {
             ]);
         }
 
-        if(isset($data['address'])){
+        if (isset($data['address'])) {
             $this->createAddress([
                 'form_params' => [
                     'name' => $data['address']
@@ -35,7 +39,7 @@ class Contact extends ExternalServiceCommunicator {
             ]);
         }
 
-        if(isset($data['city'])){
+        if (isset($data['city'])) {
             $this->createCity([
                 'form_params' => [
                     'name' => $data['city']
@@ -43,7 +47,7 @@ class Contact extends ExternalServiceCommunicator {
             ]);
         }
 
-        if(isset($data['region'])){
+        if (isset($data['region'])) {
             $this->createRegion([
                 'form_params' => [
                     'name' => $data['region']
@@ -51,7 +55,7 @@ class Contact extends ExternalServiceCommunicator {
             ]);
         }
 
-        if(isset($data['country'])){
+        if (isset($data['country'])) {
             $this->createCountry([
                 'form_params' => [
                     'name' => $data['country']
@@ -67,7 +71,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function createPhone($params){
+    public function createPhone($params)
+    {
         return $this->performRequest('POST', 'phone', $params);
     }
 
@@ -76,8 +81,9 @@ class Contact extends ExternalServiceCommunicator {
      *
      * @param Array $params
      * @return void
-    */
-    public function readPhone($params=[]){
+     */
+    public function readPhone($params = [])
+    {
         return $this->performRequest('GET', 'phone', $params);
     }
 
@@ -87,7 +93,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function updatePhone($params=[]){
+    public function updatePhone($params = [])
+    {
         return $this->performRequest('PUT', 'phone', $params);
     }
 
@@ -97,7 +104,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function deletePhone($params=[]){
+    public function deletePhone($params = [])
+    {
         return $this->performRequest('DELETE', 'phone', $params);
     }
 
@@ -108,8 +116,9 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function createAddress($params){
-       return $this->performRequest('POST', 'address', $params);
+    public function createAddress($params)
+    {
+        return $this->performRequest('POST', 'address', $params);
     }
 
     /**
@@ -117,8 +126,9 @@ class Contact extends ExternalServiceCommunicator {
      *
      * @param Array $params
      * @return void
-    */
-    public function readAddress($params=[]){
+     */
+    public function readAddress($params = [])
+    {
         return $this->performRequest('GET', 'address', $params);
     }
 
@@ -128,7 +138,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function updateAddress($params=[]){
+    public function updateAddress($params = [])
+    {
         return $this->performRequest('PUT', 'address', $params);
     }
 
@@ -138,7 +149,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function deleteAddress($params=[]){
+    public function deleteAddress($params = [])
+    {
         return $this->performRequest('DELETE', 'address', $params);
     }
 
@@ -149,7 +161,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function createCity($params){
+    public function createCity($params)
+    {
         return $this->performRequest('POST', 'city', $params);
     }
 
@@ -158,18 +171,20 @@ class Contact extends ExternalServiceCommunicator {
      *
      * @param Array $params
      * @return void
-    */
-    public function readCity($params=[]){
+     */
+    public function readCity($params = [])
+    {
         return $this->performRequest('GET', 'city', $params);
     }
 
-     /**
-      * Mengupdate data address
-      *
-      * @param Array $params
-      * @return void
-      */
-    public function updateCity($params=[]){
+    /**
+     * Mengupdate data address
+     *
+     * @param Array $params
+     * @return void
+     */
+    public function updateCity($params = [])
+    {
         return $this->performRequest('PUT', 'city', $params);
     }
 
@@ -179,7 +194,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function deleteCity($params=[]){
+    public function deleteCity($params = [])
+    {
         return $this->performRequest('DELETE', 'address', $params);
     }
 
@@ -190,7 +206,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function createRegion($params){
+    public function createRegion($params)
+    {
         return $this->performRequest('POST', 'region', $params);
     }
 
@@ -200,7 +217,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function readRegion($params=[]){
+    public function readRegion($params = [])
+    {
         return $this->performRequest('GET', 'region', $params);
     }
 
@@ -210,7 +228,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function updateRegion($params=[]){
+    public function updateRegion($params = [])
+    {
         return $this->performRequest('PUT', 'region', $params);
     }
 
@@ -220,8 +239,9 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function deleteRegion($params=[]){
-         return $this->performRequest('DELETE', 'region', $params);
+    public function deleteRegion($params = [])
+    {
+        return $this->performRequest('DELETE', 'region', $params);
     }
 
 
@@ -232,7 +252,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function createCountry($params){
+    public function createCountry($params)
+    {
         return $this->performRequest('POST', 'country', $params);
     }
 
@@ -242,7 +263,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function readCountry($params=[]){
+    public function readCountry($params = [])
+    {
         return $this->performRequest('GET', 'country', $params);
     }
 
@@ -252,7 +274,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function updateCountry($params=[]){
+    public function updateCountry($params = [])
+    {
         return $this->performRequest('PUT', 'country', $params);
     }
 
@@ -262,7 +285,8 @@ class Contact extends ExternalServiceCommunicator {
      * @param Array $params
      * @return void
      */
-    public function deleteCountry($params=[]){
-         return $this->performRequest('DELETE', 'country', $params);
+    public function deleteCountry($params = [])
+    {
+        return $this->performRequest('DELETE', 'country', $params);
     }
 }

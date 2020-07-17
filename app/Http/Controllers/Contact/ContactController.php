@@ -17,7 +17,8 @@ class ContactController extends Controller
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, Contact $contact){
+    public function __construct(ApiResponser $apiResponser, Contact $contact)
+    {
         $this->apiResponser = $apiResponser;
         $this->contact = $contact;
     }
@@ -29,7 +30,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function createPhone(Request $request){
+    public function createPhone(Request $request)
+    {
         $phone = $this->contact->createPhone([
             'form_params' => $request->all()
         ]);
@@ -43,9 +45,10 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function readPhone(Request $request){
+    public function readPhone(Request $request)
+    {
         $phone = $this->contact->readPhone([
-            'query' => ['keyword'=>$request->input('keyword')]
+            'query' => ['keyword' => $request->input('keyword')]
         ]);
 
         return $this->apiResponser->success($phone);
@@ -57,7 +60,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function updatePhone(Request $request){
+    public function updatePhone(Request $request)
+    {
         $phone = $this->contact->updateAddress([
             'form_params' => $request->all()
         ]);
@@ -71,7 +75,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function deletePhone(Request $request){
+    public function deletePhone(Request $request)
+    {
         $phone = $this->contact->deletePhone([
             'form_params' => $request->all()
         ]);
@@ -86,7 +91,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function createAddress(Request $request){
+    public function createAddress(Request $request)
+    {
         $address = $this->contact->createAddress([
             'form_params' => $request->all()
         ]);
@@ -100,9 +106,10 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function readAddress(Request $request){
+    public function readAddress(Request $request)
+    {
         $address = $this->contact->readAddress([
-            'query' => ['keyword'=>$request->input('keyword')]
+            'query' => ['keyword' => $request->input('keyword')]
         ]);
 
         return $this->apiResponser->success($address);
@@ -114,7 +121,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function updateAddress(Request $request){
+    public function updateAddress(Request $request)
+    {
         $address = $this->contact->updateAddress([
             'form_params' => $request->all()
         ]);
@@ -128,7 +136,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function deleteAddress(Request $request){
+    public function deleteAddress(Request $request)
+    {
         $address = $this->contact->deleteAddress([
             'form_params' => $request->all()
         ]);
@@ -142,7 +151,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function createCity(Request $request){
+    public function createCity(Request $request)
+    {
         $city = $this->contact->createCity([
             'form_params' => $request->all()
         ]);
@@ -156,9 +166,10 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function readCity(Request $request){
+    public function readCity(Request $request)
+    {
         $city = $this->contact->readCity([
-            'query' => ['keyword'=>$request->input('keyword')]
+            'query' => ['keyword' => $request->input('keyword')]
         ]);
 
         return $this->apiResponser->success($city);
@@ -170,7 +181,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function updateCity(Request $request){
+    public function updateCity(Request $request)
+    {
         $city = $this->contact->updateCity([
             'form_params' => $request->all()
         ]);
@@ -184,7 +196,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function deleteCity(Request $request){
+    public function deleteCity(Request $request)
+    {
         $city = $this->contact->deleteCity([
             'form_params' => $request->all()
         ]);
@@ -199,7 +212,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function createRegion(Request $request){
+    public function createRegion(Request $request)
+    {
         $region = $this->contact->createRegion([
             'form_params' => $request->all()
         ]);
@@ -213,9 +227,10 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function readRegion(Request $request){
+    public function readRegion(Request $request)
+    {
         $region = $this->contact->readRegion([
-            'query' => ['keyword'=>$request->input('keyword')]
+            'query' => ['keyword' => $request->input('keyword')]
         ]);
 
         return $this->apiResponser->success($region);
@@ -227,7 +242,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function updateRegion(Request $request){
+    public function updateRegion(Request $request)
+    {
         $region = $this->contact->updateRegion([
             'form_params' => $request->all()
         ]);
@@ -241,7 +257,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function deleteRegion(Request $request){
+    public function deleteRegion(Request $request)
+    {
         $region = $this->contact->deleteRegion([
             'form_params' => $request->all()
         ]);
@@ -256,7 +273,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function createCountry(Request $request){
+    public function createCountry(Request $request)
+    {
         $country = $this->contact->createCountry([
             'form_params' => $request->all()
         ]);
@@ -270,9 +288,10 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function readCountry(Request $request){
+    public function readCountry(Request $request)
+    {
         $country = $this->contact->readCountry([
-            'query' => ['keyword'=>$request->input('keyword')]
+            'query' => ['keyword' => $request->input('keyword')]
         ]);
 
         return $this->apiResponser->success($country);
@@ -284,7 +303,8 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function updateCountry(Request $request){
+    public function updateCountry(Request $request)
+    {
         $country = $this->contact->updateCountry([
             'form_params' => $request->all()
         ]);
@@ -298,12 +318,12 @@ class ContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function deleteCountry(Request $request){
+    public function deleteCountry(Request $request)
+    {
         $country = $this->contact->deleteCountry([
             'form_params' => $request->all()
         ]);
 
         return $this->apiResponser->success($country);
     }
-
 }

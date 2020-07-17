@@ -28,7 +28,8 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    public function __construct(ApiResponser $apiResponser) {
+    public function __construct(ApiResponser $apiResponser)
+    {
         $this->apiResponser = $apiResponser;
     }
 
@@ -52,40 +53,41 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
-    public function render($request, Exception $exception) {
-        if($exception instanceof HttpException){
+    public function render($request, Exception $exception)
+    {
+        if ($exception instanceof HttpException) {
             $code = $exception->getStatusCode();
             $message = Response::$statusTexts[$code];
 
             return $this->apiResponser->error($message, $code);
         }
 
-        if($exception instanceof ModelNotFoundException){
+        if ($exception instanceof ModelNotFoundException) {
             $model = strtolower(class_basename($exception->getModel()));
 
-            return $this->apiResponser->error('Model '.$model.' not found', Response::HTTP_NOT_FOUND);
+            return $this->apiResponser->error('Model ' . $model . ' not found', Response::HTTP_NOT_FOUND);
         }
 
-        if($exception instanceof AuthorizationException){
+        if ($exception instanceof AuthorizationException) {
             return $this->apiResponser->error($exception->getMessage(), Response::HTTP_FORBIDDEN);
         }
-        if($exception instanceof AuthenticationException){
+        if ($exception instanceof AuthenticationException) {
             return $this->apiResponser->error($exception->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
 
-        if($exception instanceof ValidationException){
+        if ($exception instanceof ValidationException) {
             $errors = $exception->validator->errors()->getMessages();
             return $this->apiResponser->error($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if($exception instanceof ClientException){
+        if ($exception instanceof ClientException) {
             $message = $exception->getResponse()->getBody();
             $code = $exception->getCode();
 
             return $this->apiResponser->errorMessage($message, $code);
         }
 
-        if(env('APP_DEBUG', FALSE)){
+        if (env('APP_DEBUG', FALSE)) {
             return parent::render($request, $exception);
         }
 

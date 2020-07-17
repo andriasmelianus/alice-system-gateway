@@ -11,7 +11,8 @@ use Firebase\JWT\ExpiredException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
     private $request;
 
     /**
@@ -19,16 +20,18 @@ class AuthController extends Controller {
      *
      * @return void
      */
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
         $this->request = $request;
     }
 
     /**
      * @return Array
      */
-    public function jwt(User $user, $remember=FALSE){
+    public function jwt(User $user, $remember = FALSE)
+    {
         $expirationTime = 60 * 60 * 12;
-        if($remember){
+        if ($remember) {
             $expirationTime = 60 * 60 * 24 * 365 * 5;
         }
 
@@ -47,14 +50,15 @@ class AuthController extends Controller {
      *
      * @return void
      */
-    public function authenticate(){
+    public function authenticate()
+    {
         $this->validate($this->request, [
             'username' => 'required',
             'password' => 'required'
         ]);
 
         $user = User::withoutGlobalScope(UserScope::class)->where('username', $this->request->input('username'))->get()->first();
-        if(!$user){
+        if (!$user) {
             return response()->json([
                 'error' => [
                     'username' => 'Username tidak terdaftar'
@@ -62,7 +66,7 @@ class AuthController extends Controller {
             ], 400);
         }
 
-        if(!$user->is_active){
+        if (!$user->is_active) {
             return response()->json([
                 'error' => [
                     'username' => 'Pengguna tidak aktif. Silahkan hubungi administrator.'
@@ -70,7 +74,7 @@ class AuthController extends Controller {
             ], 400);
         }
 
-        if(Hash::check($this->request->input('password'), $user->password)){
+        if (Hash::check($this->request->input('password'), $user->password)) {
             return response()->json([
                 'token' => $this->jwt($user, $this->request->input('remember'))
             ], 200);
@@ -80,10 +84,10 @@ class AuthController extends Controller {
             'error' => [
                 'username' => 'Username atau password tidak valid'
             ]
-        ],400);
+        ], 400);
     }
 
-    public function logout(Request $request){
-
+    public function logout(Request $request)
+    {
     }
 }

@@ -22,7 +22,8 @@ class RoleController extends Controller
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, Role $role) {
+    public function __construct(ApiResponser $apiResponser, Role $role)
+    {
         $this->apiResponser = $apiResponser;
         $this->role = $role;
     }
@@ -33,13 +34,14 @@ class RoleController extends Controller
      * @param Request $request
      * @return Role
      */
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $role = Role::where('name', 'LIKE', $request->name)->first();
 
-        if(!isset($role)){
+        if (!isset($role)) {
             $this->validate($request, $this->rules);
             $roleData = $request->all();
-            if($roleData['special'] == ""){
+            if ($roleData['special'] == "") {
                 $roleData['special'] = null;
             }
             $role = Role::create($roleData);
@@ -54,8 +56,9 @@ class RoleController extends Controller
      * @param Request $request
      * @return Role
      */
-    public function read(Request $request){
-        $keyword = $request->input('keyword').'%';
+    public function read(Request $request)
+    {
+        $keyword = $request->input('keyword') . '%';
         $roles = Role::where('name', 'LIKE', $keyword)->get();
 
         return $this->apiResponser->success($roles);
@@ -67,9 +70,10 @@ class RoleController extends Controller
      * @param Request $request
      * @return Role
      */
-    public function readByUser(Request $request){
+    public function readByUser(Request $request)
+    {
         $roles = [];
-        if($request->column && $request->value){
+        if ($request->column && $request->value) {
             $roles = DB::table('v_role_user')->where($request->column, $request->value)->get();
         }
 
@@ -82,16 +86,17 @@ class RoleController extends Controller
      * @param Request $request
      * @return Role
      */
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $this->validate($request, $this->rules);
         $roleData = $request->all();
-        if($roleData['special'] == ""){
+        if ($roleData['special'] == "") {
             $roleData['special'] = null;
         }
         $role = Role::findOrFail($roleData['id']);
         $role->fill($roleData);
 
-        if($role->isClean()){
+        if ($role->isClean()) {
             return $this->apiResponser->error('Tidak ada perubahan data.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -105,7 +110,8 @@ class RoleController extends Controller
      * @param Request $request
      * @return Role
      */
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
         $role = Role::findOrFail($request->input('id'));
         $role->delete();
 
@@ -120,7 +126,8 @@ class RoleController extends Controller
      * @param Request $request
      * @return Permission
      */
-    public function addPermission(Request $request){
+    public function addPermission(Request $request)
+    {
         $role = Role::findOrFail($request->role_id);
         $permissionsAdded = $role->permissions()->attach($request->permissionIds);
 
@@ -133,7 +140,8 @@ class RoleController extends Controller
      * @param Request $request
      * @return JSON
      */
-    public function removePermission(Request $request){
+    public function removePermission(Request $request)
+    {
         DB::table('permission_role')->whereIn('id', $request->ids)->delete();
 
         return $this->apiResponser->success('');

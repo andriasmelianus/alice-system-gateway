@@ -19,17 +19,17 @@ class CheckPermissionMiddleware
         $userSpecials = Arr::pluck($request->auth->permission, 'special');
         $userSlugs = Arr::pluck($request->auth->permission, 'slug');
 
-        if(in_array('nothing', $userSpecials)){
+        if (in_array('nothing', $userSpecials)) {
             return response()->json([
                 'error' => "Anda tidak memiliki akses."
-            ],403);
+            ], 403);
         }
 
-        if(!in_array('everything', $userSpecials)){
-            if(!in_array($permission, $userSlugs)){
+        if (!in_array('everything', $userSpecials)) {
+            if (!in_array($permission, $userSlugs)) {
                 return response()->json([
                     'error' => "Anda tidak memiliki akses."
-                ],403);
+                ], 403);
             }
         }
 

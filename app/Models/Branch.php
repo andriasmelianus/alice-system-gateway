@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Branch extends Model {
+class Branch extends Model
+{
     use SoftDeletes;
 
     /**
@@ -31,7 +32,8 @@ class Branch extends Model {
      *
      * @return User
      */
-    public function users(){
+    public function users()
+    {
         return $this->hasMany('App\User');
     }
 }

@@ -12,9 +12,7 @@ use DB;
 class PermissionController extends Controller
 {
     private $apiResponser;
-    private $rules = [
-
-    ];
+    private $rules = [];
     private $permission;
 
     /**
@@ -22,7 +20,8 @@ class PermissionController extends Controller
      *
      * @return void
      */
-    public function __construct(ApiResponser $apiResponser, Permission $permission) {
+    public function __construct(ApiResponser $apiResponser, Permission $permission)
+    {
         $this->apiResponser = $apiResponser;
         $this->permission = $permission;
     }
@@ -33,8 +32,8 @@ class PermissionController extends Controller
      * @param Request $request
      * @return Permission
      */
-    public function create(Request $request){
-
+    public function create(Request $request)
+    {
     }
 
     /**
@@ -45,7 +44,8 @@ class PermissionController extends Controller
      * @param Request $request {column: String, value: String/Number}
      * @return Permission
      */
-    public function read(Request $request){
+    public function read(Request $request)
+    {
         $permissions = DB::table('v_permissions')->get();
         return $this->apiResponser->success($permissions);
     }
@@ -57,10 +57,11 @@ class PermissionController extends Controller
      * @param Request $request
      * @return Permission
      */
-    public function readByRole(Request $request){
+    public function readByRole(Request $request)
+    {
         $permissions = [];
-        if($request->column && $request->value){
-            $permissions= DB::table('v_permission_role')->where($request->column, $request->value)->get();
+        if ($request->column && $request->value) {
+            $permissions = DB::table('v_permission_role')->where($request->column, $request->value)->get();
         }
 
         return $this->apiResponser->success($permissions);
